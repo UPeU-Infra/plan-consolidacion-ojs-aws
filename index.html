@@ -482,70 +482,76 @@ graph TD
       <div class="mermaid">
 %%{init: {'theme': 'base', 'themeVariables': {'sectionBkgColor': '#dbeafe', 'altSectionBkgColor': '#f4f6fa', 'taskBkgColor': '#1a4a8a', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#0a2342', 'taskTextLightColor': '#ffffff', 'activeTaskBkgColor': '#c8922a', 'activeTaskBorderColor': '#8a5e00', 'critBkgColor': '#c0392b', 'critBorderColor': '#922b21', 'doneTaskBkgColor': '#1a7a4a', 'doneTaskBorderColor': '#145a36', 'titleColor': '#0a2342', 'gridColor': '#dce3ee', 'fontSize': '13px'}}}%%
 gantt
-  title Plan de Migración OJS — AWS UPeU
+  title Plan de Migración OJS — Abril 2026 (30 días)
   dateFormat  YYYY-MM-DD
   axisFormat  %d-%b
 
   section Preparación
-    Análisis y diseño arquitectura     :done,    p1, 2026-03-20, 2026-03-30
-    Crear repo y documentación         :done,    p2, 2026-03-28, 2026-03-30
+    Análisis costos y arquitectura       :done,    p1, 2026-03-20, 2026-03-30
+    Playbook Ansible + repo GitHub       :done,    p2, 2026-03-28, 2026-03-30
 
-  section Sprint 1 — Piloto
-    Migración theologika (menor tráfico) :active, s1, 2026-04-01, 2026-04-14
-    Monitoreo y validación 2 semanas     :        s2, 2026-04-07, 2026-04-21
+  section Semana 1 — Piloto
+    Provisionar EC2 theologika (t3.large):active,  s1, 2026-04-01, 2026-04-03
+    Migrar theologika + validación       :active,  s2, 2026-04-03, 2026-04-07
 
-  section Sprint 2
-    Migración riva                       :        s3, 2026-04-14, 2026-04-25
-    Migración rivc                       :        s4, 2026-04-21, 2026-05-02
+  section Semana 2 — x2
+    Migrar riva                          :         s3, 2026-04-07, 2026-04-11
+    Migrar rivc                          :         s4, 2026-04-09, 2026-04-14
 
-  section Sprint 3
-    Migración rccs                       :        s5, 2026-05-02, 2026-05-14
-    Validación métricas post-migración   :        s6, 2026-05-07, 2026-05-21
+  section Semana 3 — Consolidación
+    Migrar rccs                          :         s5, 2026-04-14, 2026-04-18
+    Validación métricas CloudWatch       :         s6, 2026-04-16, 2026-04-21
 
-  section Sprint 4 — Crítico
-    Migración apuntes (más activa)       :crit,   s7, 2026-05-21, 2026-06-04
-    Smoke test completo                  :        s8, 2026-06-01, 2026-06-10
+  section Semana 4 — Crítico
+    Migrar apuntes (ventana mant.)       :crit,    s7, 2026-04-22, 2026-04-26
+    Smoke test + monitoreo 48h           :crit,    s8, 2026-04-26, 2026-04-28
 
-  section Cierre
-    Migración Portal OJS SciBack → UPeU :        s9, 2026-06-10, 2026-07-01
-    Terminar instancias antiguas         :        s10,2026-07-01, 2026-07-15
-    Informe final de ahorro              :        s11,2026-07-10, 2026-07-20
+  section Cierre — Últimos días
+    Portal OJS SciBack → UPeU            :         s9, 2026-04-28, 2026-04-30
+    Terminar instancias c6i + EIPs       :         s10,2026-04-29, 2026-04-30
+    Informe final de ahorro              :         s11,2026-04-30, 2026-04-30
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3><span class="icon">🗂️</span> Orden de Migración por Riesgo</h3>
+    <h3><span class="icon">🗂️</span> Orden de Migración — Abril 2026 (30 días)</h3>
     <div class="timeline">
       <div class="tl-item">
         <div class="tl-dot done"></div>
         <div class="tl-date">Marzo 2026 — Completado</div>
         <div class="tl-title">✅ Preparación y análisis</div>
-        <div class="tl-desc">Extracción de métricas CloudWatch, análisis de costos, diseño de arquitectura propuesta, documentación técnica.</div>
+        <div class="tl-desc">Extracción de métricas CloudWatch, análisis de costos, diseño de arquitectura, Ansible playbook listo.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot active"></div>
-        <div class="tl-date">Abril 2026 — Sprint 1 (Inicio)</div>
-        <div class="tl-title">🔵 theologika — Revista piloto</div>
-        <div class="tl-desc">CPU avg 0.15%, tráfico mínimo. Ideal para validar la nueva arquitectura t3.large + Docker sin riesgo.</div>
+        <div class="tl-date">1–7 abril — Semana 1</div>
+        <div class="tl-title">🟢 theologika — Piloto de validación</div>
+        <div class="tl-desc">CPU avg 0.15%, tráfico mínimo. Provisionar EC2 t3.large, correr Ansible, migrar DB, validar OJS. Confirma que el playbook funciona correctamente antes de escalar.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-date">Abril – Mayo 2026 — Sprints 2–3</div>
-        <div class="tl-title">riva → rivc → rccs</div>
-        <div class="tl-desc">Migración secuencial de las revistas de bajo tráfico, una a una, con ventana de validación entre cada migración.</div>
+        <div class="tl-date">7–14 abril — Semana 2</div>
+        <div class="tl-title">🟢 riva + rivc — Migración en paralelo</div>
+        <div class="tl-desc">Ambas son esencialmente idle (CPU 0.15%). Se migran con 2 días de separación aprovechando el playbook ya validado.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-date">Mayo – Junio 2026 — Sprint 4 (Crítico)</div>
-        <div class="tl-title">⚡ apuntes — Revista más activa</div>
-        <div class="tl-desc">CPU avg 5%, pico 87%. Se migra con arquitectura ya validada. Se evalúa t3.xlarge si los picos son recurrentes post-migración.</div>
+        <div class="tl-date">14–21 abril — Semana 3</div>
+        <div class="tl-title">🟢 rccs + validación general</div>
+        <div class="tl-desc">Migración de rccs. Los últimos 3 días se revisan métricas CloudWatch de las 4 revistas migradas antes de tocar la más activa.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-date">Junio – Julio 2026 — Cierre</div>
-        <div class="tl-title">Portal OJS UPeU (15 revistas) → cuenta UPeU</div>
-        <div class="tl-desc">Migración del portal actual (SciBack → UPeU). Terminar todas las instancias antiguas. Cierre de cuenta SciBack para OJS.</div>
+        <div class="tl-date">22–28 abril — Semana 4 ⚠️ Crítico</div>
+        <div class="tl-title">🔵 apuntes — Revista más activa</div>
+        <div class="tl-desc">CPU avg 5–14%, pico esporádico 87%. Requiere aviso previo a editores. Ventana de mantenimiento coordinada. Se evalúa t3.xlarge si los picos se repiten tras 48h de monitoreo.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">28–30 abril — Cierre</div>
+        <div class="tl-title">🟡 Portal OJS SciBack → UPeU + limpieza</div>
+        <div class="tl-desc">Migrar portal (15 revistas, 1,192 artículos) a cuenta UPeU. Terminar las 5 instancias c6i.2xlarge, liberar EIPs huérfanas. Ahorro activo desde el 1 de mayo.</div>
       </div>
     </div>
   </div>
@@ -559,10 +565,10 @@ gantt
       <div class="mermaid">
 %%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#1a7a4a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
 xychart-beta
-  title "Ahorro acumulado 2026 (USD) — a medida que migran las revistas"
-  x-axis ["Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-  y-axis "USD acumulado" 0 --> 10000
-  line [182, 364, 1369, 2556, 3743, 4930, 6117, 7304, 8491]
+  title "Ahorro acumulado desde mayo 2026 (USD)"
+  x-axis ["May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  y-axis "USD acumulado" 0 --> 9000
+  line [1003, 2006, 3009, 4012, 5015, 6018, 7021, 8024]
       </div>
     </div>
   </div>
