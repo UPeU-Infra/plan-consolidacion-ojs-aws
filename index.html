@@ -16,7 +16,7 @@
       --text:         #1e2a3a;
       --text-muted:   #5a6a7a;
       --border:       #dce3ee;
-      --green:        #1a7a4a;
+      --green:        #27ae60;
       --green-bg:     #e6f7ee;
       --red:          #c0392b;
       --red-bg:       #fdecea;
@@ -276,7 +276,7 @@
     <h3><span class="icon">📊</span> Costo mensual: Actual vs Propuesto (USD)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
-%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#c0392b,#1a7a4a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342', 'plotColorPalette': '#c0392b,#1a7a4a'}}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#c0392b,#27ae60', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
 xychart-beta
   title "Costo Mensual por Componente (USD)"
   x-axis ["EC2", "EBS", "EIPs", "Snapshots/Otros"]
@@ -286,7 +286,7 @@ xychart-beta
       </div>
     </div>
     <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:12px;">
-      🔴 Actual &nbsp;|&nbsp; 🔵 Propuesto
+      🔴 Actual &nbsp;|&nbsp; 🟢 Propuesto
     </p>
   </div>
 
@@ -462,10 +462,10 @@ graph TD
 
   style U    fill:#0a2342,stroke:#0a2342,color:#ffffff
   style A    fill:#fff3dc,stroke:#c8922a,color:#5a3a00
-  style B    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
-  style C    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
-  style D    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
-  style E    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style B    fill:#d4edda,stroke:#27ae60,color:#1a5c30
+  style C    fill:#d4edda,stroke:#27ae60,color:#1a5c30
+  style D    fill:#d4edda,stroke:#27ae60,color:#1a5c30
+  style E    fill:#d4edda,stroke:#27ae60,color:#1a5c30
   style F    fill:#fff3dc,stroke:#c8922a,color:#5a3a00
   style CW   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
   style S3   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
@@ -480,7 +480,7 @@ graph TD
     <h3><span class="icon">📅</span> Gantt — Sprints de Migración (Abril – Julio 2026)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
-%%{init: {'theme': 'base', 'themeVariables': {'sectionBkgColor': '#dbeafe', 'altSectionBkgColor': '#f4f6fa', 'taskBkgColor': '#1a4a8a', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#0a2342', 'taskTextLightColor': '#ffffff', 'activeTaskBkgColor': '#c8922a', 'activeTaskBorderColor': '#8a5e00', 'critBkgColor': '#c0392b', 'critBorderColor': '#922b21', 'doneTaskBkgColor': '#1a7a4a', 'doneTaskBorderColor': '#145a36', 'titleColor': '#0a2342', 'gridColor': '#dce3ee', 'fontSize': '13px'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'sectionBkgColor': '#dbeafe', 'altSectionBkgColor': '#f4f6fa', 'taskBkgColor': '#1a4a8a', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#0a2342', 'taskTextLightColor': '#ffffff', 'activeTaskBkgColor': '#c8922a', 'activeTaskBorderColor': '#8a5e00', 'critBkgColor': '#c0392b', 'critBorderColor': '#922b21', 'doneTaskBkgColor': '#27ae60', 'doneTaskBorderColor': '#1e8449', 'titleColor': '#0a2342', 'gridColor': '#dce3ee', 'fontSize': '13px'}}}%%
 gantt
   title Plan de Migración OJS — Abril 2026 (30 días)
   dateFormat  YYYY-MM-DD
@@ -563,7 +563,7 @@ gantt
     <h3><span class="icon">💰</span> Acumulado de ahorro mes a mes (2026)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
-%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#1a7a4a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#27ae60', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
 xychart-beta
   title "Ahorro acumulado desde mayo 2026 (USD)"
   x-axis ["May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
@@ -632,10 +632,10 @@ graph LR
 
   style Internet fill:#0a2342,stroke:#0a2342,color:#ffffff
   style Nginx   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
-  style Certbot fill:#1a7a4a,stroke:#145a36,color:#ffffff
+  style Certbot fill:#27ae60,stroke:#1e8449,color:#ffffff
   style Ansible fill:#6a3a9a,stroke:#4a2a7a,color:#ffffff
   style OJS     fill:#fff3dc,stroke:#c8922a,color:#5a3a00
-  style DB      fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style DB      fill:#d4edda,stroke:#27ae60,color:#1a5c30
       </div>
     </div>
   </div>
@@ -690,8 +690,8 @@ graph LR
       activeTaskBorderColor:'#8a5e00',
       critBkgColor:        '#c0392b',
       critBorderColor:     '#922b21',
-      doneTaskBkgColor:    '#1a7a4a',
-      doneTaskBorderColor: '#145a36',
+      doneTaskBkgColor:    '#27ae60',
+      doneTaskBorderColor: '#1e8449',
       taskTextLightColor:  '#ffffff',
       taskTextDarkColor:   '#0a2342'
     }
