@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan de Consolidación OJS — UPeU AWS</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --upeu-navy:    #0a2342;
+      --upeu-blue:    #1a4a8a;
+      --upeu-gold:    #c8922a;
+      --upeu-gold-lt: #f0b940;
+      --bg:           #f4f6fa;
+      --white:        #ffffff;
+      --text:         #1e2a3a;
+      --text-muted:   #5a6a7a;
+      --border:       #dce3ee;
+      --green:        #1a7a4a;
+      --green-bg:     #e6f7ee;
+      --red:          #c0392b;
+      --red-bg:       #fdecea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--upeu-navy) 0%, var(--upeu-blue) 100%);
+      color: white;
+      padding: 48px 40px 36px;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .logo-wrap img { height: 64px; filter: brightness(0) invert(1); }
+    .header-text h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .header-text .subtitle {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+    .badges { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .badge.gold { background: var(--upeu-gold); border-color: var(--upeu-gold); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--upeu-navy);
+      border-left: 4px solid var(--upeu-gold);
+      padding-left: 14px;
+      margin: 48px 0 20px;
+    }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-top: 3px solid var(--border);
+    }
+    .stat-card.danger  { border-top-color: var(--red); }
+    .stat-card.success { border-top-color: var(--green); }
+    .stat-card.gold    { border-top-color: var(--upeu-gold); }
+    .stat-card.navy    { border-top-color: var(--upeu-navy); }
+    .stat-label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); }
+    .stat-value { font-size: 2.1rem; font-weight: 800; margin: 6px 0 4px; line-height: 1; }
+    .stat-card.danger  .stat-value { color: var(--red); }
+    .stat-card.success .stat-value { color: var(--green); }
+    .stat-card.gold    .stat-value { color: var(--upeu-gold); }
+    .stat-card.navy    .stat-value { color: var(--upeu-navy); }
+    .stat-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--upeu-navy);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card h3 .icon { font-size: 1.1rem; }
+
+    /* ── TWO-COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width: 680px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── TABLES ── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: var(--bg); font-weight: 700; color: var(--upeu-navy); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8faff; }
+    .tag {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .tag-red    { background: var(--red-bg);   color: var(--red); }
+    .tag-green  { background: var(--green-bg); color: var(--green); }
+    .tag-gold   { background: #fff3dc;         color: #8a5e00; }
+    .tag-blue   { background: #e8f0fe;         color: var(--upeu-blue); }
+    .money { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .money-red   { color: var(--red); }
+    .money-green { color: var(--green); }
+
+    /* ── MERMAID ── */
+    .mermaid-wrap { overflow-x: auto; }
+    .mermaid { text-align: center; }
+
+    /* ── ALERT BOX ── */
+    .alert {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .alert-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-body { font-size: 0.9rem; }
+    .alert-body strong { display: block; margin-bottom: 3px; }
+    .alert.success { background: var(--green-bg); border-left: 4px solid var(--green); }
+    .alert.warning { background: #fff8e1; border-left: 4px solid var(--upeu-gold); }
+    .alert.danger  { background: var(--red-bg);   border-left: 4px solid var(--red); }
+
+    /* ── TIMELINE STEPS ── */
+    .timeline { position: relative; padding-left: 32px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 24px; }
+    .tl-dot {
+      position: absolute;
+      left: -27px; top: 4px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 3px solid var(--upeu-blue);
+      background: white;
+    }
+    .tl-dot.done  { background: var(--green);      border-color: var(--green); }
+    .tl-dot.active{ background: var(--upeu-gold);   border-color: var(--upeu-gold); }
+    .tl-date { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .tl-title { font-size: 0.95rem; font-weight: 700; color: var(--upeu-navy); margin: 2px 0; }
+    .tl-desc  { font-size: 0.83rem; color: var(--text-muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--upeu-navy);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 24px;
+      font-size: 0.82rem;
+    }
+    footer strong { color: white; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="https://upeu.edu.pe/wp-content/uploads/2022/04/logo-upeu-dark-svg.svg" alt="UPeU" />
+    </div>
+    <div class="header-text">
+      <h1>Plan de Consolidación OJS en AWS</h1>
+      <div class="subtitle">Optimización de infraestructura cloud para el ecosistema de revistas científicas UPeU</div>
+      <div class="badges">
+        <span class="badge">DTI / CRAI — Infraestructura TI</span>
+        <span class="badge">AWS us-east-2</span>
+        <span class="badge gold">Ahorro proyectado: USD 13,044 / año</span>
+        <span class="badge">Marzo 2026</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 1. RESUMEN EJECUTIVO ── -->
+  <div class="section-title">Resumen Ejecutivo</div>
+
+  <div class="alert danger">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-body">
+      <strong>Situación actual: sobredimensionamiento crítico</strong>
+      Las 5 revistas científicas de UPeU están alojadas en instancias <code>c6i.2xlarge</code> (8 vCPU / 16 GB RAM) con una utilización promedio de CPU de <strong>0.15%</strong>. El costo mensual supera los <strong>USD 1,455</strong> cuando debería ser inferior a <strong>USD 500</strong>.
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card danger">
+      <div class="stat-label">Costo mensual actual</div>
+      <div class="stat-value">$1,455</div>
+      <div class="stat-desc">5 instancias c6i.2xlarge + EBS + EIPs + snapshots</div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-label">Costo mensual propuesto</div>
+      <div class="stat-value">$452</div>
+      <div class="stat-desc">6 instancias t3.large (5 revistas + portal OJS) con margen de rendimiento</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">Ahorro mensual</div>
+      <div class="stat-value">$1,003</div>
+      <div class="stat-desc">Reducción del 69% en costos de infraestructura</div>
+    </div>
+    <div class="stat-card navy">
+      <div class="stat-label">Ahorro anual proyectado</div>
+      <div class="stat-value">$13,044</div>
+      <div class="stat-desc">Sin degradación del servicio — con margen de rendimiento incluido</div>
+    </div>
+  </div>
+
+  <!-- ── 2. COMPARATIVA DE COSTOS ── -->
+  <div class="section-title">Comparativa de Costos</div>
+
+  <div class="card">
+    <h3><span class="icon">📊</span> Costo mensual: Actual vs Propuesto (USD)</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+xychart-beta
+  title "Costo Mensual por Componente (USD)"
+  x-axis ["EC2", "EBS", "EIPs", "Snapshots/Otros"]
+  y-axis "USD / mes" 0 --> 1300
+  bar [1238, 80, 22, 115]
+  bar [365, 18, 22, 0]
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:12px;">
+      🔴 Actual &nbsp;|&nbsp; 🔵 Propuesto
+    </p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3><span class="icon">🔴</span> Infraestructura Actual</h3>
+      <table>
+        <thead><tr><th>Componente</th><th>Detalle</th><th>USD/mes</th></tr></thead>
+        <tbody>
+          <tr><td>5 × EC2 c6i.2xlarge</td><td>8 vCPU / 16 GB RAM</td><td class="money money-red">$1,238</td></tr>
+          <tr><td>5 × EBS 200 GB gp3</td><td>1,000 GB total</td><td class="money money-red">$80</td></tr>
+          <tr><td>6 × Elastic IP</td><td>1 sin instancia asignada</td><td class="money money-red">$22</td></tr>
+          <tr><td>11 Snapshots (Oct-2025)</td><td>200 GB c/u ≈ 2,200 GB</td><td class="money money-red">$110</td></tr>
+          <tr><td>EBS huérfano (15 GB)</td><td>Sin instancia adjunta</td><td class="money money-red">$1.20</td></tr>
+          <tr><td>Log group sin retención</td><td>16,161 MB acumulados</td><td class="money money-red">$4</td></tr>
+          <tr style="background:#fdecea"><td colspan="2"><strong>TOTAL ACTUAL</strong></td><td class="money money-red"><strong>~$1,455</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3><span class="icon">🟢</span> Infraestructura Propuesta (6 OJS)</h3>
+      <table>
+        <thead><tr><th>Componente</th><th>Detalle</th><th>USD/mes</th></tr></thead>
+        <tbody>
+          <tr><td>6 × EC2 t3.large</td><td>2 vCPU / 8 GB RAM + burst</td><td class="money money-green">$365</td></tr>
+          <tr><td>6 × EBS 30 GB gp3</td><td>180 GB total</td><td class="money money-green">$14</td></tr>
+          <tr><td>6 × Elastic IP</td><td>Todas asignadas</td><td class="money money-green">$22</td></tr>
+          <tr><td>Data transfer OUT</td><td>~40-60 GB/mes total</td><td class="money money-green">$27</td></tr>
+          <tr><td>EBS Snapshots diarios</td><td>Retención 7 días</td><td class="money money-green">$7.50</td></tr>
+          <tr><td>CloudWatch + S3 backups</td><td>Logs + dumps DB</td><td class="money money-green">$10</td></tr>
+          <tr style="background:#e6f7ee"><td colspan="2"><strong>TOTAL PROPUESTO</strong></td><td class="money money-green"><strong>~$446</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 3. ANÁLISIS DE RENDIMIENTO ── -->
+  <div class="section-title">Análisis de Rendimiento — CPU (16–29 marzo 2026)</div>
+
+  <div class="alert warning">
+    <div class="alert-icon">📈</div>
+    <div class="alert-body">
+      <strong>Fuente: AWS CloudWatch — 14 días de datos reales</strong>
+      Datos extraídos directamente de la cuenta AWS UPeU (874962955245, us-east-2) el 30 de marzo de 2026.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">⚡</span> Utilización CPU Promedio vs Máxima por Revista</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+xychart-beta
+  title "CPU % — Promedio diario 14 dias (c6i.2xlarge = 8 vCPU)"
+  x-axis ["apuntes", "theologika", "riva", "rivc", "rccs"]
+  y-axis "CPU %" 0 --> 100
+  bar [5.1, 0.15, 0.155, 0.15, 0.28]
+  line [86.96, 8.17, 4.98, 6.87, 18.56]
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:12px;">
+      🔵 CPU Promedio &nbsp;|&nbsp; 🔶 CPU Máxima (pico)
+    </p>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🖥️</span> Diagnóstico por Revista</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Revista</th>
+          <th>Instancia actual</th>
+          <th>CPU Promedio</th>
+          <th>CPU Máx.</th>
+          <th>Red OUT</th>
+          <th>Diagnóstico</th>
+          <th>Propuesta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>apuntes</strong></td>
+          <td><span class="tag tag-red">c6i.2xlarge</span></td>
+          <td>5.1%</td>
+          <td>86.96%</td>
+          <td>~1.2 MB</td>
+          <td>Activa, picos esporádicos</td>
+          <td><span class="tag tag-gold">t3.large / evaluar t3.xlarge</span></td>
+        </tr>
+        <tr>
+          <td><strong>theologika</strong></td>
+          <td><span class="tag tag-red">c6i.2xlarge</span></td>
+          <td>0.15%</td>
+          <td>8.17%</td>
+          <td>~0.1 MB</td>
+          <td><span class="tag tag-red">Prácticamente idle</span></td>
+          <td><span class="tag tag-green">t3.large</span></td>
+        </tr>
+        <tr>
+          <td><strong>riva</strong></td>
+          <td><span class="tag tag-red">c6i.2xlarge</span></td>
+          <td>0.155%</td>
+          <td>4.98%</td>
+          <td>~0.3 MB</td>
+          <td><span class="tag tag-red">Prácticamente idle</span></td>
+          <td><span class="tag tag-green">t3.large</span></td>
+        </tr>
+        <tr>
+          <td><strong>rivc</strong></td>
+          <td><span class="tag tag-red">c6i.2xlarge</span></td>
+          <td>0.150%</td>
+          <td>6.87%</td>
+          <td>~0.4 MB</td>
+          <td><span class="tag tag-red">Prácticamente idle</span></td>
+          <td><span class="tag tag-green">t3.large</span></td>
+        </tr>
+        <tr>
+          <td><strong>rccs</strong></td>
+          <td><span class="tag tag-red">c6i.2xlarge</span></td>
+          <td>0.28%</td>
+          <td>18.56%</td>
+          <td>~0.8 MB</td>
+          <td>Muy bajo uso</td>
+          <td><span class="tag tag-green">t3.large</span></td>
+        </tr>
+        <tr>
+          <td><strong>Portal OJS</strong></td>
+          <td><span class="tag tag-blue">t3.medium (SciBack)</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>~15 GB/mes</td>
+          <td>15 revistas, 1,192 artículos</td>
+          <td><span class="tag tag-green">t3.large (UPeU)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 4. ARQUITECTURA ── -->
+  <div class="section-title">Arquitectura Propuesta</div>
+
+  <div class="card">
+    <h3><span class="icon">🏗️</span> Diagrama de Arquitectura — 6 OJS en AWS UPeU (us-east-2)</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+graph TD
+  subgraph Internet
+    U[👥 Usuarios / Investigadores]
+  end
+
+  subgraph AWS_UPeU["☁️ AWS UPeU — Cuenta 874962955245 (us-east-2)"]
+    subgraph EC2_Group["6 × EC2 t3.large — Docker + OJS 3.3.0-22"]
+      A["🔵 apuntes<br/>t3.large<br/>EBS 30GB"]
+      B["🟢 theologika<br/>t3.large<br/>EBS 30GB"]
+      C["🟢 riva<br/>t3.large<br/>EBS 30GB"]
+      D["🟢 rivc<br/>t3.large<br/>EBS 30GB"]
+      E["🟢 rccs<br/>t3.large<br/>EBS 30GB"]
+      F["🟡 Portal OJS<br/>t3.large<br/>EBS 30GB"]
+    end
+    CW["📊 CloudWatch<br/>Monitoreo + Alertas"]
+    S3["🪣 S3<br/>Backups DB"]
+  end
+
+  U -->|HTTPS| A
+  U -->|HTTPS| B
+  U -->|HTTPS| C
+  U -->|HTTPS| D
+  U -->|HTTPS| E
+  U -->|HTTPS| F
+  A & B & C & D & E & F --> CW
+  A & B & C & D & E & F -->|dumps diarios| S3
+
+  style AWS_UPeU fill:#eef4ff,stroke:#1a4a8a,stroke-width:2px
+  style EC2_Group fill:#f0f8f0,stroke:#1a7a4a,stroke-width:1px
+  style A fill:#fff3dc,stroke:#c8922a
+  style F fill:#fffde7,stroke:#c8922a
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. PLAN DE MIGRACIÓN ── -->
+  <div class="section-title">Plan de Migración — Cronograma</div>
+
+  <div class="card">
+    <h3><span class="icon">📅</span> Gantt — Sprints de Migración (Abril – Julio 2026)</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+gantt
+  title Plan de Migración OJS — AWS UPeU
+  dateFormat  YYYY-MM-DD
+  axisFormat  %d-%b
+
+  section Preparación
+    Análisis y diseño arquitectura     :done,    p1, 2026-03-20, 2026-03-30
+    Crear repo y documentación         :done,    p2, 2026-03-28, 2026-03-30
+
+  section Sprint 1 — Piloto
+    Migración theologika (menor tráfico) :active, s1, 2026-04-01, 2026-04-14
+    Monitoreo y validación 2 semanas     :        s2, 2026-04-07, 2026-04-21
+
+  section Sprint 2
+    Migración riva                       :        s3, 2026-04-14, 2026-04-25
+    Migración rivc                       :        s4, 2026-04-21, 2026-05-02
+
+  section Sprint 3
+    Migración rccs                       :        s5, 2026-05-02, 2026-05-14
+    Validación métricas post-migración   :        s6, 2026-05-07, 2026-05-21
+
+  section Sprint 4 — Crítico
+    Migración apuntes (más activa)       :crit,   s7, 2026-05-21, 2026-06-04
+    Smoke test completo                  :        s8, 2026-06-01, 2026-06-10
+
+  section Cierre
+    Migración Portal OJS SciBack → UPeU :        s9, 2026-06-10, 2026-07-01
+    Terminar instancias antiguas         :        s10,2026-07-01, 2026-07-15
+    Informe final de ahorro              :        s11,2026-07-10, 2026-07-20
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🗂️</span> Orden de Migración por Riesgo</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-date">Marzo 2026 — Completado</div>
+        <div class="tl-title">✅ Preparación y análisis</div>
+        <div class="tl-desc">Extracción de métricas CloudWatch, análisis de costos, diseño de arquitectura propuesta, documentación técnica.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">Abril 2026 — Sprint 1 (Inicio)</div>
+        <div class="tl-title">🔵 theologika — Revista piloto</div>
+        <div class="tl-desc">CPU avg 0.15%, tráfico mínimo. Ideal para validar la nueva arquitectura t3.large + Docker sin riesgo.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Abril – Mayo 2026 — Sprints 2–3</div>
+        <div class="tl-title">riva → rivc → rccs</div>
+        <div class="tl-desc">Migración secuencial de las revistas de bajo tráfico, una a una, con ventana de validación entre cada migración.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Mayo – Junio 2026 — Sprint 4 (Crítico)</div>
+        <div class="tl-title">⚡ apuntes — Revista más activa</div>
+        <div class="tl-desc">CPU avg 5%, pico 87%. Se migra con arquitectura ya validada. Se evalúa t3.xlarge si los picos son recurrentes post-migración.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Junio – Julio 2026 — Cierre</div>
+        <div class="tl-title">Portal OJS UPeU (15 revistas) → cuenta UPeU</div>
+        <div class="tl-desc">Migración del portal actual (SciBack → UPeU). Terminar todas las instancias antiguas. Cierre de cuenta SciBack para OJS.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. AHORRO PROYECTADO ── -->
+  <div class="section-title">Proyección de Ahorro</div>
+
+  <div class="card">
+    <h3><span class="icon">💰</span> Acumulado de ahorro mes a mes (2026)</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+xychart-beta
+  title "Ahorro acumulado 2026 (USD) — a medida que migran las revistas"
+  x-axis ["Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  y-axis "USD acumulado" 0 --> 10000
+  line [182, 364, 1369, 2556, 3743, 4930, 6117, 7304, 8491]
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3><span class="icon">📋</span> Resumen financiero 2026</h3>
+      <table>
+        <thead><tr><th>Escenario</th><th>Mensual</th><th>Anual</th></tr></thead>
+        <tbody>
+          <tr><td>Sin cambios</td><td class="money money-red">$1,455</td><td class="money money-red">$17,460</td></tr>
+          <tr><td>6 × t3.large</td><td class="money money-green">$452</td><td class="money money-green">$5,424</td></tr>
+          <tr><td>apuntes en t3.xlarge</td><td class="money">$513</td><td class="money">$6,156</td></tr>
+          <tr style="background:#e6f7ee">
+            <td><strong>Ahorro (t3.large)</strong></td>
+            <td class="money money-green"><strong>$1,003</strong></td>
+            <td class="money money-green"><strong>$12,036</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3><span class="icon">🎯</span> Indicadores clave del proyecto</h3>
+      <table>
+        <thead><tr><th>KPI</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Revistas a migrar</td><td><span class="tag tag-blue">5 + 1 portal</span></td></tr>
+          <tr><td>Reducción de costo EC2</td><td><span class="tag tag-green">−85%</span></td></tr>
+          <tr><td>Reducción EBS</td><td><span class="tag tag-green">−82%</span></td></tr>
+          <tr><td>Margen de rendimiento</td><td><span class="tag tag-gold">t3.large = 8 GB RAM</span></td></tr>
+          <tr><td>Tiempo estimado de migración</td><td>3–4 meses</td></tr>
+          <tr><td>Riesgo de downtime</td><td><span class="tag tag-gold">Bajo — con aviso previo</span></td></tr>
+          <tr><td>Inicio del proyecto</td><td>1 abril 2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 7. STACK TÉCNICO ── -->
+  <div class="section-title">Stack Técnico</div>
+
+  <div class="card">
+    <h3><span class="icon">🛠️</span> Componentes por instancia</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+graph LR
+  subgraph EC2["EC2 t3.large — Ubuntu 22.04 LTS"]
+    subgraph Docker["Docker Compose"]
+      OJS["📰 OJS 3.3.0-22\nApache + PHP\nuid=100"]
+      DB["🗄️ MariaDB 10.11\nutf8mb4"]
+    end
+    Nginx["🔀 Nginx\nReverse Proxy\nSSL Termination"]
+    Certbot["🔒 Certbot\nLet's Encrypt"]
+    Ansible["⚙️ Ansible\nIaC Deployment"]
+  end
+  Internet["🌐 Internet\nHTTPS"] -->|443| Nginx
+  Nginx -->|8080| OJS
+  OJS <-->|inside network| DB
+  Certbot -.->|renueva| Nginx
+
+  style EC2 fill:#eef4ff,stroke:#1a4a8a
+  style Docker fill:#f0fff4,stroke:#1a7a4a
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 8. RESPONSABLES ── -->
+  <div class="section-title">Equipo y Responsables</div>
+  <div class="card">
+    <table>
+      <thead><tr><th>Rol</th><th>Responsable</th><th>Responsabilidad</th></tr></thead>
+      <tbody>
+        <tr><td>Líder técnico</td><td><strong>Ing. Juan Alberto Sánchez</strong></td><td>Diseño de arquitectura, ejecución de migraciones, validación</td></tr>
+        <tr><td>Infraestructura TI</td><td>DTI / CRAI — Campus Lima</td><td>Provisioning EC2, DNS, seguridad AWS</td></tr>
+        <tr><td>Comunicación</td><td>Ing. Juan Alberto Sánchez</td><td>Coordinación con editores, avisos de mantenimiento</td></tr>
+        <tr><td>Aprobación</td><td>Dirección de TI UPeU</td><td>Validación de costos y aprobación del plan</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <strong>Universidad Peruana Unión — DTI / CRAI · Infraestructura TI</strong><br/>
+  Informe generado: 30 de marzo de 2026 · Datos fuente: AWS CloudWatch, cuenta 874962955245
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#1a4a8a',
+      primaryTextColor: '#ffffff',
+      primaryBorderColor: '#0a2342',
+      lineColor: '#5a6a7a',
+      secondaryColor: '#f4f6fa',
+      tertiaryColor: '#e8f0fe',
+      fontSize: '14px'
+    },
+    gantt: { fontSize: 13, barHeight: 22, barGap: 6, topPadding: 50 }
+  });
+</script>
+</body>
+</html>
