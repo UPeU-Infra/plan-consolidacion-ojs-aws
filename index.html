@@ -153,6 +153,13 @@
     /* ── MERMAID ── */
     .mermaid-wrap { overflow-x: auto; }
     .mermaid { text-align: center; }
+    /* Fix: asegurar texto oscuro en elementos sobre fondo claro */
+    .mermaid svg text { fill: #1e2a3a; }
+    .mermaid svg .label foreignObject div { color: #1e2a3a; }
+    .mermaid svg .cluster-label text { fill: #0a2342 !important; font-weight: 700; }
+    .mermaid svg .edgeLabel text { fill: #1e2a3a !important; }
+    /* Nodos explícitamente coloreados mantienen su propio fill */
+    .mermaid svg .node rect, .mermaid svg .node circle { stroke-width: 1.5px; }
 
     /* ── ALERT BOX ── */
     .alert {
@@ -269,6 +276,7 @@
     <h3><span class="icon">📊</span> Costo mensual: Actual vs Propuesto (USD)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#c0392b,#1a7a4a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342', 'plotColorPalette': '#c0392b,#1a7a4a'}}}}%%
 xychart-beta
   title "Costo Mensual por Componente (USD)"
   x-axis ["EC2", "EBS", "EIPs", "Snapshots/Otros"]
@@ -330,6 +338,7 @@ xychart-beta
     <h3><span class="icon">⚡</span> Utilización CPU Promedio vs Máxima por Revista</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#1a4a8a,#c8922a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
 xychart-beta
   title "CPU % — Promedio diario 14 dias (c6i.2xlarge = 8 vCPU)"
   x-axis ["apuntes", "theologika", "riva", "rivc", "rccs"]
@@ -423,19 +432,20 @@ xychart-beta
     <h3><span class="icon">🏗️</span> Diagrama de Arquitectura — 6 OJS en AWS UPeU (us-east-2)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#dbeafe', 'primaryTextColor': '#0a2342', 'primaryBorderColor': '#1a4a8a', 'lineColor': '#1a4a8a', 'clusterBkg': '#eef4ff', 'clusterBorder': '#1a4a8a', 'titleColor': '#0a2342'}}}%%
 graph TD
   subgraph Internet
-    U[👥 Usuarios / Investigadores]
+    U["👥 Usuarios / Investigadores"]
   end
 
   subgraph AWS_UPeU["☁️ AWS UPeU — Cuenta 874962955245 (us-east-2)"]
     subgraph EC2_Group["6 × EC2 t3.large — Docker + OJS 3.3.0-22"]
-      A["🔵 apuntes<br/>t3.large<br/>EBS 30GB"]
-      B["🟢 theologika<br/>t3.large<br/>EBS 30GB"]
-      C["🟢 riva<br/>t3.large<br/>EBS 30GB"]
-      D["🟢 rivc<br/>t3.large<br/>EBS 30GB"]
-      E["🟢 rccs<br/>t3.large<br/>EBS 30GB"]
-      F["🟡 Portal OJS<br/>t3.large<br/>EBS 30GB"]
+      A["🔵 apuntes<br/>t3.large / EBS 30GB"]
+      B["🟢 theologika<br/>t3.large / EBS 30GB"]
+      C["🟢 riva<br/>t3.large / EBS 30GB"]
+      D["🟢 rivc<br/>t3.large / EBS 30GB"]
+      E["🟢 rccs<br/>t3.large / EBS 30GB"]
+      F["🟡 Portal OJS<br/>t3.large / EBS 30GB"]
     end
     CW["📊 CloudWatch<br/>Monitoreo + Alertas"]
     S3["🪣 S3<br/>Backups DB"]
@@ -450,10 +460,15 @@ graph TD
   A & B & C & D & E & F --> CW
   A & B & C & D & E & F -->|dumps diarios| S3
 
-  style AWS_UPeU fill:#eef4ff,stroke:#1a4a8a,stroke-width:2px
-  style EC2_Group fill:#f0f8f0,stroke:#1a7a4a,stroke-width:1px
-  style A fill:#fff3dc,stroke:#c8922a
-  style F fill:#fffde7,stroke:#c8922a
+  style U    fill:#0a2342,stroke:#0a2342,color:#ffffff
+  style A    fill:#fff3dc,stroke:#c8922a,color:#5a3a00
+  style B    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style C    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style D    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style E    fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
+  style F    fill:#fff3dc,stroke:#c8922a,color:#5a3a00
+  style CW   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
+  style S3   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
       </div>
     </div>
   </div>
@@ -465,6 +480,7 @@ graph TD
     <h3><span class="icon">📅</span> Gantt — Sprints de Migración (Abril – Julio 2026)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'sectionBkgColor': '#dbeafe', 'altSectionBkgColor': '#f4f6fa', 'taskBkgColor': '#1a4a8a', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#0a2342', 'taskTextLightColor': '#ffffff', 'activeTaskBkgColor': '#c8922a', 'activeTaskBorderColor': '#8a5e00', 'critBkgColor': '#c0392b', 'critBorderColor': '#922b21', 'doneTaskBkgColor': '#1a7a4a', 'doneTaskBorderColor': '#145a36', 'titleColor': '#0a2342', 'gridColor': '#dce3ee', 'fontSize': '13px'}}}%%
 gantt
   title Plan de Migración OJS — AWS UPeU
   dateFormat  YYYY-MM-DD
@@ -541,6 +557,7 @@ gantt
     <h3><span class="icon">💰</span> Acumulado de ahorro mes a mes (2026)</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'xyChart': {'backgroundColor': '#ffffff', 'plotColorPalette': '#1a7a4a', 'axisLineColor': '#5a6a7a', 'axisLabelColor': '#0a2342', 'titleColor': '#0a2342'}}}}%%
 xychart-beta
   title "Ahorro acumulado 2026 (USD) — a medida que migran las revistas"
   x-axis ["Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
@@ -591,23 +608,28 @@ xychart-beta
     <h3><span class="icon">🛠️</span> Componentes por instancia</h3>
     <div class="mermaid-wrap">
       <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#dbeafe', 'primaryTextColor': '#0a2342', 'primaryBorderColor': '#1a4a8a', 'lineColor': '#1a4a8a', 'clusterBkg': '#eef4ff', 'clusterBorder': '#1a4a8a', 'titleColor': '#0a2342'}}}%%
 graph LR
   subgraph EC2["EC2 t3.large — Ubuntu 22.04 LTS"]
     subgraph Docker["Docker Compose"]
-      OJS["📰 OJS 3.3.0-22\nApache + PHP\nuid=100"]
-      DB["🗄️ MariaDB 10.11\nutf8mb4"]
+      OJS["📰 OJS 3.3.0-22<br/>Apache + PHP / uid=100"]
+      DB["🗄️ MariaDB 10.11<br/>utf8mb4"]
     end
-    Nginx["🔀 Nginx\nReverse Proxy\nSSL Termination"]
-    Certbot["🔒 Certbot\nLet's Encrypt"]
-    Ansible["⚙️ Ansible\nIaC Deployment"]
+    Nginx["🔀 Nginx<br/>Reverse Proxy<br/>SSL Termination"]
+    Certbot["🔒 Certbot<br/>Let's Encrypt"]
+    Ansible["⚙️ Ansible<br/>IaC Deployment"]
   end
-  Internet["🌐 Internet\nHTTPS"] -->|443| Nginx
-  Nginx -->|8080| OJS
-  OJS <-->|inside network| DB
-  Certbot -.->|renueva| Nginx
+  Internet["🌐 Internet<br/>HTTPS :443"] -->|443| Nginx
+  Nginx -->|:8080| OJS
+  OJS <-->|red interna| DB
+  Certbot -.->|renueva cert| Nginx
 
-  style EC2 fill:#eef4ff,stroke:#1a4a8a
-  style Docker fill:#f0fff4,stroke:#1a7a4a
+  style Internet fill:#0a2342,stroke:#0a2342,color:#ffffff
+  style Nginx   fill:#1a4a8a,stroke:#0a2342,color:#ffffff
+  style Certbot fill:#1a7a4a,stroke:#145a36,color:#ffffff
+  style Ansible fill:#6a3a9a,stroke:#4a2a7a,color:#ffffff
+  style OJS     fill:#fff3dc,stroke:#c8922a,color:#5a3a00
+  style DB      fill:#d4edda,stroke:#1a7a4a,color:#0a3a1a
       </div>
     </div>
   </div>
@@ -638,15 +660,35 @@ graph LR
     startOnLoad: true,
     theme: 'base',
     themeVariables: {
-      primaryColor: '#1a4a8a',
-      primaryTextColor: '#ffffff',
-      primaryBorderColor: '#0a2342',
-      lineColor: '#5a6a7a',
-      secondaryColor: '#f4f6fa',
-      tertiaryColor: '#e8f0fe',
-      fontSize: '14px'
-    },
-    gantt: { fontSize: 13, barHeight: 22, barGap: 6, topPadding: 50 }
+      primaryColor:       '#dbeafe',   /* fondo nodos — azul claro */
+      primaryTextColor:   '#0a2342',   /* texto sobre nodos */
+      primaryBorderColor: '#1a4a8a',
+      lineColor:          '#1a4a8a',
+      secondaryColor:     '#e0f2fe',
+      tertiaryColor:      '#f4f6fa',
+      background:         '#ffffff',
+      mainBkg:            '#dbeafe',
+      nodeBorder:         '#1a4a8a',
+      clusterBkg:         '#eef4ff',
+      clusterBorder:      '#1a4a8a',
+      titleColor:         '#0a2342',
+      edgeLabelBackground:'#f4f6fa',
+      fontSize:           '14px',
+      /* gantt */
+      sectionBkgColor:     '#eef4ff',
+      altSectionBkgColor:  '#ffffff',
+      taskBkgColor:        '#1a4a8a',
+      taskTextColor:       '#ffffff',
+      taskTextOutsideColor:'#0a2342',
+      activeTaskBkgColor:  '#c8922a',
+      activeTaskBorderColor:'#8a5e00',
+      critBkgColor:        '#c0392b',
+      critBorderColor:     '#922b21',
+      doneTaskBkgColor:    '#1a7a4a',
+      doneTaskBorderColor: '#145a36',
+      taskTextLightColor:  '#ffffff',
+      taskTextDarkColor:   '#0a2342'
+    }
   });
 </script>
 </body>
