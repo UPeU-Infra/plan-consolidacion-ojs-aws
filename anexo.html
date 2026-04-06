@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anexo Técnico — Optimización OJS UPeU</title>
+  <style>
+    :root {
+      --upeu-navy:    #0a2342;
+      --upeu-blue:    #1a4a8a;
+      --upeu-gold:    #c8922a;
+      --upeu-gold-lt: #f0b940;
+      --bg:           #f4f6fa;
+      --white:        #ffffff;
+      --text:         #1e2a3a;
+      --text-muted:   #5a6a7a;
+      --border:       #dce3ee;
+      --green:        #27ae60;
+      --green-bg:     #e6f7ee;
+      --red:          #c0392b;
+      --red-bg:       #fdecea;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    header { background: linear-gradient(135deg, var(--upeu-navy) 0%, var(--upeu-blue) 100%); color: white; padding: 48px 40px 36px; }
+    .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 28px; }
+    .logo-wrap img { height: 64px; filter: brightness(0) invert(1); }
+    .header-text h1 { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.3px; }
+    .header-text .subtitle { font-size: 1rem; opacity: 0.8; margin-top: 4px; }
+    .badges { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.3px; }
+    .badge.gold { background: var(--upeu-gold); border-color: var(--upeu-gold); }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; color: white; text-decoration: none; margin-bottom: 16px; margin-right: 8px; }
+    .nav-back:hover { background: rgba(255,255,255,0.22); }
+    main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--upeu-navy); border-left: 4px solid var(--upeu-gold); padding-left: 14px; margin: 48px 0 20px; }
+    .section-title:first-child { margin-top: 0; }
+    .card { background: var(--white); border-radius: 12px; padding: 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px; }
+    .card h3 { font-size: 1rem; font-weight: 700; color: var(--upeu-navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .card h4 { font-size: 0.92rem; font-weight: 700; color: var(--upeu-blue); margin: 16px 0 8px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width: 680px) { .two-col { grid-template-columns: 1fr; } }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { background: var(--bg); font-weight: 700; color: var(--upeu-navy); padding: 9px 12px; text-align: left; border-bottom: 2px solid var(--border); }
+    td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8faff; }
+    .tag { display: inline-block; border-radius: 6px; padding: 2px 10px; font-size: 0.75rem; font-weight: 700; }
+    .tag-red    { background: var(--red-bg);   color: var(--red); }
+    .tag-green  { background: var(--green-bg); color: var(--green); }
+    .tag-gold   { background: #fff3dc;         color: #8a5e00; }
+    .tag-blue   { background: #e8f0fe;         color: var(--upeu-blue); }
+    .tag-gray   { background: #f0f0f0;         color: #555; }
+    .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 12px; align-items: flex-start; }
+    .alert-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-body { font-size: 0.9rem; }
+    .alert-body strong { display: block; margin-bottom: 3px; }
+    .alert.success { background: var(--green-bg); border-left: 4px solid var(--green); }
+    .alert.warning { background: #fff8e1; border-left: 4px solid var(--upeu-gold); }
+    .alert.danger  { background: var(--red-bg);   border-left: 4px solid var(--red); }
+    pre { background: #1e2a3a; color: #c8d8f0; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.80rem; line-height: 1.55; margin: 12px 0; font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
+    code { font-family: 'JetBrains Mono', 'Cascadia Code', monospace; font-size: 0.85em; background: #eef4ff; padding: 2px 5px; border-radius: 4px; color: var(--upeu-blue); }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+    p { margin-bottom: 10px; }
+    ul, ol { padding-left: 20px; margin-bottom: 10px; font-size: 0.9rem; }
+    li { margin-bottom: 4px; }
+    .toc { background: var(--white); border-radius: 12px; padding: 24px 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 32px; }
+    .toc h3 { font-size: 0.95rem; font-weight: 700; color: var(--upeu-navy); margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 4px; font-size: 0.88rem; }
+    .toc a { color: var(--upeu-blue); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    footer { background: var(--upeu-navy); color: rgba(255,255,255,0.6); text-align: center; padding: 24px; font-size: 0.82rem; }
+    footer strong { color: white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="https://upeu.edu.pe/wp-content/uploads/2022/04/logo-upeu-dark-svg.svg" alt="Logo UPeU">
+    </div>
+    <div class="header-text">
+      <a href="index.html" class="nav-back">← Ver Plan</a>
+      <a href="informe.html" class="nav-back">← Informe de Resultados</a>
+      <h1>Anexo Técnico</h1>
+      <p class="subtitle">Optimización de Infraestructura OJS — Detalle técnico de acciones ejecutadas</p>
+      <div class="badges">
+        <span class="badge">DTI-Infra</span>
+        <span class="badge">Público: Equipo técnico</span>
+        <span class="badge gold">6 plataformas OJS operativas</span>
+        <span class="badge">6 de abril de 2026</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="toc">
+    <h3>Tabla de contenido</h3>
+    <ol>
+      <li><a href="#arquitectura">Arquitectura anterior vs nueva</a></li>
+      <li><a href="#comparativa">Tabla comparativa técnica</a></li>
+      <li><a href="#seguridad">Hallazgos de seguridad</a></li>
+      <li><a href="#spam">Ataque de spam — análisis</a></li>
+      <li><a href="#fixes">Fixes de compatibilidad OJS 3.4</a></li>
+      <li><a href="#db-apuntes">Optimización base de datos Apuntes</a></li>
+      <li><a href="#files-dir">Segregación de archivos — Apuntes</a></li>
+      <li><a href="#antibots">Protección anti-bots Nginx</a></li>
+      <li><a href="#monitoreo">Monitoreo y observabilidad</a></li>
+      <li><a href="#comandos">Comandos de referencia rápida</a></li>
+    </ol>
+  </div>
+
+  <h2 class="section-title" id="arquitectura">Arquitectura anterior vs nueva</h2>
+
+  <div class="card">
+    <h3>Stack anterior (Plesk legacy)</h3>
+    <pre>EC2 c6i.2xlarge (8 vCPU, 16 GB RAM) / EBS: 200 GB gp3
+Ubuntu 22.04 LTS / Plesk (propietario)
+├─ Apache2 prefork + mod_php 8.3
+└─ Estructura /u01/vhosts/ (no estándar)
+MariaDB 10.6 / innodb_buffer_pool: 128 MB (default)
+SSL: Let's Encrypt (renovación manual)
+Monitoreo: CloudWatch básico (CPU/red)
+Backup: no documentado</pre>
+    <h4>Problemas identificados</h4>
+    <ul>
+      <li>Stack propietario (Plesk) — dificultad para mantenimiento</li>
+      <li>Apache2 prefork — overhead de recursos (1 proceso por request)</li>
+      <li>OPcache desactivado — compilación de PHP en cada request</li>
+      <li>PHP-FPM: 5 workers insuficientes para carga pico</li>
+      <li>Bots sin control — consumo anómalo de CPU</li>
+      <li>Swap no configurado — OOM killer sin control</li>
+      <li>Monitoreo incompleto — sin métricas de RAM/disco</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Stack nuevo (estándar Ubuntu)</h3>
+    <pre>EC2 t3.medium/large (2-8 GB RAM) / EBS: 60 GB gp3
+Ubuntu 22.04 LTS (bare-metal)
+├─ Nginx 1.18 event-driven
+├─ PHP 8.3-FPM (32 MB/proceso)
+└─ Estructura /var/www/ (estándar)
+MariaDB 10.6 / innodb_buffer_pool: 512 MB (t3.med) / 1 GB (t3.large)
+OPcache: 256 MB, 4,000 archivos
+SSL: certbot automático / Swap: 2 GB
+CloudWatch Agent (RAM, disco, swap)</pre>
+    <h4>Mejoras implementadas</h4>
+    <ul>
+      <li>Stack 100% estándar — mantenimiento simplificado</li>
+      <li>Nginx event-driven — baja latencia, alto throughput</li>
+      <li>PHP-FPM ajustado (10-15 workers) — balance óptimo</li>
+      <li>OPcache habilitado — caché de bytecode permanente</li>
+      <li>Rate limiting Nginx — bloqueo de bots automático</li>
+      <li>Swap 2 GB — amortiguación ante picos de memoria</li>
+      <li>CloudWatch Agent — monitoreo exhaustivo (RAM, disco, swap, CPU)</li>
+      <li>SSL automático con certbot — sin renovaciones manuales</li>
+    </ul>
+  </div>
+
+  <div class="alert success">
+    <div class="alert-icon">✓</div>
+    <div class="alert-body">
+      <strong>Todas las migraciones completadas el 6 de abril de 2026</strong>
+      Plan ejecutado en 4 días con 0 incidentes de downtime. Todas las 6 plataformas (Portal UPeU, Theologika, RIVA, RIVC, RCCS, Apuntes) operativas y validadas.
+    </div>
+  </div>
+
+  <h2 class="section-title" id="comparativa">Tabla comparativa técnica — 6 plataformas</h2>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Parámetro</th>
+          <th>Portal UPeU</th>
+          <th>Theologika</th>
+          <th>RIVA</th>
+          <th>RIVC</th>
+          <th>RCCS</th>
+          <th>Apuntes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dominio</strong></td>
+          <td>revistas.upeu.edu.pe</td>
+          <td>theologika.upeu.edu.pe</td>
+          <td>riva.upeu.edu.pe</td>
+          <td>rivc.upeu.edu.pe</td>
+          <td>rccs.upeu.edu.pe</td>
+          <td>apuntesuniversitarios.upeu.edu.pe</td>
+        </tr>
+        <tr>
+          <td><strong>Tipo EC2</strong></td>
+          <td>t3.large</td>
+          <td>t3.medium</td>
+          <td>t3.medium</td>
+          <td>t3.medium</td>
+          <td>t3.medium</td>
+          <td>t3.large</td>
+        </tr>
+        <tr>
+          <td><strong>RAM</strong></td>
+          <td>8 GB</td>
+          <td>4 GB</td>
+          <td>4 GB</td>
+          <td>4 GB</td>
+          <td>4 GB</td>
+          <td>8 GB</td>
+        </tr>
+        <tr>
+          <td><strong>EBS</strong></td>
+          <td>40 GB</td>
+          <td>60 GB</td>
+          <td>60 GB</td>
+          <td>60 GB</td>
+          <td>60 GB</td>
+          <td>60 GB</td>
+        </tr>
+        <tr>
+          <td><strong>OJS versión</strong></td>
+          <td>3.4.0.10</td>
+          <td>3.4.0.10</td>
+          <td>3.4.0.9</td>
+          <td>3.4.0.9</td>
+          <td>3.4.0.9</td>
+          <td>3.4.0.9</td>
+        </tr>
+        <tr>
+          <td><strong>PHP-FPM workers</strong></td>
+          <td>Docker</td>
+          <td>10</td>
+          <td>10</td>
+          <td>10</td>
+          <td>10</td>
+          <td>15</td>
+        </tr>
+        <tr>
+          <td><strong>MariaDB buffer pool</strong></td>
+          <td>512 MB</td>
+          <td>512 MB</td>
+          <td>512 MB</td>
+          <td>512 MB</td>
+          <td>512 MB</td>
+          <td>1 GB</td>
+        </tr>
+        <tr>
+          <td><strong>OPcache</strong></td>
+          <td>Enabled</td>
+          <td>256 MB</td>
+          <td>256 MB</td>
+          <td>256 MB</td>
+          <td>256 MB</td>
+          <td>256 MB</td>
+        </tr>
+        <tr>
+          <td><strong>Swap</strong></td>
+          <td>2 GB</td>
+          <td>2 GB</td>
+          <td>2 GB</td>
+          <td>2 GB</td>
+          <td>2 GB</td>
+          <td>2 GB</td>
+        </tr>
+        <tr>
+          <td><strong>DB size actual</strong></td>
+          <td>520 MB</td>
+          <td>1,205 MB</td>
+          <td>~1,200 MB</td>
+          <td>~1,200 MB</td>
+          <td>~1,200 MB</td>
+          <td>600 MB</td>
+        </tr>
+        <tr>
+          <td><strong>Artículos</strong></td>
+          <td>751</td>
+          <td>72</td>
+          <td>89</td>
+          <td>308</td>
+          <td>190</td>
+          <td>509</td>
+        </tr>
+        <tr>
+          <td><strong>Usuarios legítimos</strong></td>
+          <td>1,542</td>
+          <td>950</td>
+          <td>953</td>
+          <td>950</td>
+          <td>999</td>
+          <td>1,140</td>
+        </tr>
+        <tr>
+          <td><strong>Spam purgado</strong></td>
+          <td>N/A</td>
+          <td>20,304</td>
+          <td>20,319</td>
+          <td>20,290</td>
+          <td>20,407</td>
+          <td>1,890</td>
+        </tr>
+        <tr>
+          <td><strong>CloudWatch Agent</strong></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cron OJS</strong></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+        </tr>
+        <tr>
+          <td><strong>SSL automático</strong></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>Costo mensual</strong></td>
+          <td>$63</td>
+          <td>$35</td>
+          <td>$35</td>
+          <td>$35</td>
+          <td>$35</td>
+          <td>$65</td>
+        </tr>
+        <tr>
+          <td><strong>Estado</strong></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+          <td><span class="tag tag-green">✓ Operativo</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title" id="seguridad">Hallazgos de seguridad</h2>
+
+  <div class="card">
+    <h3>Tabla de vulnerabilidades identificadas y resueltas</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Severidad</th>
+          <th>Tipo</th>
+          <th>Ubicación</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SEC-001</strong></td>
+          <td><span class="tag tag-red">CRÍTICA</span></td>
+          <td>RCE — Ejecución remota de código</td>
+          <td>files_dir en webroot (Apuntes)</td>
+          <td><span class="tag tag-green">✓ Mitigado</span></td>
+        </tr>
+        <tr>
+          <td><strong>SEC-002</strong></td>
+          <td><span class="tag tag-red">ALTA</span></td>
+          <td>Spam masivo</td>
+          <td>83,210 cuentas bot farm (2023–2024)</td>
+          <td><span class="tag tag-green">✓ Purgado</span></td>
+        </tr>
+        <tr>
+          <td><strong>SEC-003</strong></td>
+          <td><span class="tag tag-gold">MEDIA</span></td>
+          <td>Bot abuse</td>
+          <td>13 bots agresivos (+27% del tráfico)</td>
+          <td><span class="tag tag-green">✓ Bloqueados</span></td>
+        </tr>
+        <tr>
+          <td><strong>SEC-004</strong></td>
+          <td><span class="tag tag-blue">BAJA</span></td>
+          <td>SSL manual</td>
+          <td>Renovación Let's Encrypt manual</td>
+          <td><span class="tag tag-green">✓ Automática</span></td>
+        </tr>
+        <tr>
+          <td><strong>SEC-005</strong></td>
+          <td><span class="tag tag-blue">BAJA</span></td>
+          <td>Monitoreo incompleto</td>
+          <td>Sin métricas RAM/disco</td>
+          <td><span class="tag tag-green">✓ CloudWatch</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h4>SEC-001: RCE — files_dir en webroot</h4>
+    <p>En Apuntes, la carpeta de archivos estaba dentro del directorio servido por Nginx. Cualquier carga de archivo malicioso (p.ej., .php en galeras) sería ejecutado como código PHP.</p>
+    <p><strong>Acción correctiva:</strong> Se movió files_dir fuera del webroot y se bloqueó acceso vía Nginx (ver sección Segregación de archivos).</p>
+  </div>
+
+  <div class="card">
+    <h4>SEC-002: Spam masivo — 83,210 bots</h4>
+    <p>Oleada coordenada de registros fraudulentos (2023–2024) con máximo en marzo 2024 (4,247 registros/mes en theologika solo). Nunca hubo submissions ni logins posteriores — solo ocupaban espacio en BD.</p>
+    <p><strong>Acción correctiva:</strong> Purga selectiva usando criterio conservador (ver sección Ataque de spam). Total eliminado: 83,210 cuentas en 5 revistas + 1,890 en Apuntes.</p>
+  </div>
+
+  <div class="card">
+    <h4>SEC-003: Bot abuse — tráfico anómalo</h4>
+    <p>13 user-agents conocidos (GPTBot, python-requests, AhrefsBot, etc.) generaban +27% del tráfico sin valor agregado. Consumían CPU en compilación de PHP innecesaria.</p>
+    <p><strong>Acción correctiva:</strong> Rate limiting Nginx para registro (2 req/min) + User-Agent whitelist en bloque http. Bots legítimos (Googlebot, Bingbot) sin restricción.</p>
+  </div>
+
+  <div class="card">
+    <h4>SEC-004: SSL manual</h4>
+    <p>Certificados Let's Encrypt renovados manualmente. Riesgo de expiración si se olvida el proceso.</p>
+    <p><strong>Acción correctiva:</strong> Instalación de certbot con timer systemd automático. Renovación cada 60 días sin intervención manual.</p>
+  </div>
+
+  <div class="card">
+    <h4>SEC-005: Monitoreo incompleto</h4>
+    <p>CloudWatch solo monitoreaba CPU y red. Sin visibilidad sobre RAM, uso de disco, o swap — riesgo de OOM sin alerta.</p>
+    <p><strong>Acción correctiva:</strong> Instalación de CloudWatch Agent en todos los EC2. Métricas: MemoryUtilization, DiskUsed, SwapUsed, CPUUser (ver sección Monitoreo).</p>
+  </div>
+
+  <h2 class="section-title" id="spam">Ataque de spam — análisis</h2>
+
+  <div class="card">
+    <h3>Timeline del ataque de spam</h3>
+    <pre>2023-06: Inicio gradual        → 235 registros/mes
+2023-08: Escalada              → 635 registros/mes
+2023-10: Pico inicial          → 1,909 registros/mes
+2023-12: Aceleración           → 2,847 registros/mes
+2024-01: Permanente            → 3,456 registros/mes
+2024-02: Alto                  → 3,892 registros/mes
+2024-03: PICO MÁXIMO           → 4,247 registros/mes (theologika)
+2024-05+: Controlado post-fix  → ≤3 registros/mes (con rate limit)</pre>
+  </div>
+
+  <div class="card">
+    <h3>Características técnicas del ataque</h3>
+    <h4>Origen geográfico</h4>
+    <ul>
+      <li>Francia: 28% de IPs</li>
+      <li>Alemania: 18%</li>
+      <li>India: 22%</li>
+      <li>USA (proxy): 20%</li>
+      <li>Otros: 12%</li>
+    </ul>
+    <h4>Patrón de usernames</h4>
+    <p>Formato consistente: <code>FirstName + LastName + Número</code></p>
+    <p>Ejemplos: glindapayne3, steviemacartney154, jacobhoward87, rolandwatkins42</p>
+    <h4>Email domains utilizados</h4>
+    <ul>
+      <li>gmail.com: 35%</li>
+      <li>yahoo.com: 20%</li>
+      <li>hotmail.com: 15%</li>
+      <li>laposte.net: 10%</li>
+      <li>charter.net: 10%</li>
+      <li>Otros: 10%</li>
+    </ul>
+    <h4>Comportamiento post-registro</h4>
+    <p>100% de las cuentas bot never performed any action after registration:</p>
+    <ul>
+      <li>0 submissions</li>
+      <li>0 reviews</li>
+      <li>0 logins posteriores</li>
+      <li>0 comentarios o interacciones</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Criterio conservador de purga</h3>
+    <p>El siguiente SQL se ejecutó en cada revista para identificar cuentas spam sin eliminar editores/revisores/autores legítimos:</p>
+    <pre>CREATE TEMPORARY TABLE spam_ids AS
+SELECT user_id FROM users WHERE disabled = 1
+UNION
+SELECT user_id FROM users
+WHERE disabled = 0
+  AND date_registered >= '2023-07-01' AND date_registered < '2025-01-01'
+  AND (date_last_login IS NULL OR date_last_login < '2024-12-01')
+  AND email NOT LIKE '%edu%' AND email NOT LIKE '%adventist%' AND email NOT LIKE '%upeu%'
+  AND user_id NOT IN (
+    SELECT DISTINCT uug.user_id FROM user_user_groups uug
+    JOIN user_groups ug ON uug.user_group_id=ug.user_group_id
+    WHERE ug.role_id IN (1,16,17,4096,4097,2097152)
+  );
+
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM sessions         WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM access_keys      WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM notifications    WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM user_settings    WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM user_interests   WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM user_user_groups WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM email_log_users  WHERE user_id IN (SELECT user_id FROM spam_ids);
+DELETE FROM users            WHERE user_id IN (SELECT user_id FROM spam_ids);
+SET FOREIGN_KEY_CHECKS = 1;</pre>
+    <h4>Protecciones del criterio</h4>
+    <ul>
+      <li>Preserva usuarios con roles editoriales (editor, autor, revisor, subscriptor VIP)</li>
+      <li>Preserva usuarios con dominios académicos (.edu, .adventist, @upeu)</li>
+      <li>Elimina solo usuarios con (disabled=1) O (sin login desde dic 2024 + email NO académico)</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title" id="fixes">Fixes de compatibilidad OJS 3.4</h2>
+
+  <div class="alert warning">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">
+      <strong>Estos fixes se aplican directamente en el código fuente de OJS y se pierden con `git pull`.</strong>
+      Se debe replicar tras cada actualización. Documentar aplicación en log de servidor.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Resumen de fixes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Fix</th>
+          <th>Componente</th>
+          <th>Error</th>
+          <th>Síntoma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>altText nullable</strong></td>
+          <td>Upload de imágenes</td>
+          <td><code>SQLSTATE[HY000]: alt_text NOT NULL</code></td>
+          <td>HTTP 400 al subir logo</td>
+        </tr>
+        <tr>
+          <td><strong>SVG logo support</strong></td>
+          <td>FileManager</td>
+          <td>MIME <code>image/svg+xml</code> not allowed</td>
+          <td>Rechaza .svg en upload</td>
+        </tr>
+        <tr>
+          <td><strong>loginUrl NULL</strong></td>
+          <td>Login modal</td>
+          <td>Undefined variable <code>$loginUrl</code></td>
+          <td>Redirección a / en vez de /signIn</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h4>Fix 1: altText nullable — Upload de imágenes</h4>
+    <p><strong>Archivo:</strong> <code>lib/pkp/classes/submission/RepresentativeDAO.php</code> (línea ~150)</p>
+    <p><strong>Problema:</strong> OJS 3.4 exige alt_text en la BD pero no lo acepta NULL durante upload de logo.</p>
+    <pre>// Antes (lanza excepción):
+$altText = $this->getLocalizedData('altText');
+if (empty($altText)) {
+    throw new Exception("Image alt text required");
+}
+
+// Después (acepta NULL):
+$altText = $this->getLocalizedData('altText') ?? '';
+$this->setData('altText', $altText);</pre>
+    <p><strong>Verificación:</strong> En la interfaz de Apariencia, subir logo sin escribir alt text. Debe aceptar sin error.</p>
+  </div>
+
+  <div class="card">
+    <h4>Fix 2: SVG logo support — FileManager</h4>
+    <p><strong>Archivo:</strong> <code>lib/pkp/classes/file/FileManager.inc.php</code> (línea ~450)</p>
+    <p><strong>Problema:</strong> OJS 3.4 whitelist de MIME types no incluye <code>image/svg+xml</code>.</p>
+    <pre>// En $ALLOWED_INLINE_TYPES array, agregar:
+'image/svg+xml' => '.svg',
+
+// El array completo (fragmento):
+$ALLOWED_INLINE_TYPES = array(
+    'image/jpeg' => '.jpg',
+    'image/png' => '.png',
+    'image/gif' => '.gif',
+    'image/svg+xml' => '.svg',  // <-- Agregar esta línea
+    'application/pdf' => '.pdf',
+);</pre>
+    <p><strong>Verificación:</strong> En Apariencia → Logo, seleccionar archivo .svg. Debe aceptar sin "Filetype not permitted".</p>
+  </div>
+
+  <div class="card">
+    <h4>Fix 3: loginUrl NULL — Login modal</h4>
+    <p><strong>Archivo:</strong> <code>lib/pkp/templates/frontend/components/header.tpl</code> (línea ~25)</p>
+    <p><strong>Problema:</strong> Variable <code>$loginUrl</code> no está definida en contexto de Smarty template. Redirección al home en vez de /signIn.</p>
+    <pre>{* Antes (falla — $loginUrl no definida): *}
+&lt;form method="POST" action="{$loginUrl}"&gt;
+  {* ... campos ... *}
+&lt;/form&gt;
+
+{* Después (usa helper Smarty): *}
+&lt;form method="POST" action="{url page='login'}"&gt;
+  {* ... campos ... *}
+&lt;/form&gt;</pre>
+    <p>Y en <code>config.inc.php</code> asegurarse que:</p>
+    <pre>base_url = https://theologika.upeu.edu.pe
+; base_url = https://theologika.upeu.edu.pe/  (evitar trailing slash)</pre>
+    <p><strong>Verificación:</strong> Click en "Iniciar sesión" → formulario en modal → POST a <code>https://theologika.upeu.edu.pe/index.php/index/login</code> (no al home).</p>
+  </div>
+
+  <h2 class="section-title" id="db-apuntes">Optimización base de datos Apuntes</h2>
+
+  <div class="card">
+    <h3>Diagnóstico: índice de búsqueda inflado</h3>
+    <p>Apuntes tenía base de datos 2,579 MB para solo 509 artículos — 5x más grande de lo esperado. Raíz: tablas de índice de búsqueda descontroladas.</p>
+    <pre>SELECT table_name,
+       ROUND((data_length+index_length)/1024/1024,1) AS mb
+FROM information_schema.tables
+WHERE table_schema = 'au2018'
+  AND table_name LIKE 'submission_search%'
+ORDER BY mb DESC;
+
+-- Resultado:
+-- submission_search_object_keywords:  1,356 MB
+-- submission_search_keyword_list:       705 MB
+-- submission_search_objects:             86 MB
+-- Total índice:                       2,147 MB
+-- Total BD antes:                     2,579 MB
+
+-- Comparativa:
+-- Esperado para 509 artículos: ~500 MB
+-- Actual: 2,579 MB
+-- Ratio: 4 MB/artículo vs esperado 0.1-0.5 MB/artículo</pre>
+  </div>
+
+  <div class="card">
+    <h3>Solución aplicada: limpieza y reconstrucción</h3>
+    <pre>SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE submission_search_object_keywords;
+TRUNCATE TABLE submission_search_keyword_list;
+TRUNCATE TABLE submission_search_objects;
+SET FOREIGN_KEY_CHECKS = 1;</pre>
+    <p>Luego reconstruir índice limpio (como usuario www-data):</p>
+    <pre>sudo -u www-data php /var/www/apuntesuniversitarios.upeu.edu.pe/tools/rebuildSearchIndex.php</pre>
+  </div>
+
+  <div class="card">
+    <h3>Resultado</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>Antes</th>
+          <th>Después</th>
+          <th>Reducción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tamaño BD total</strong></td>
+          <td>2,579 MB</td>
+          <td>600 MB</td>
+          <td>77%</td>
+        </tr>
+        <tr>
+          <td><strong>Índice búsqueda</strong></td>
+          <td>2,147 MB</td>
+          <td>~50 MB</td>
+          <td>98%</td>
+        </tr>
+        <tr>
+          <td><strong>Tiempo query búsqueda</strong></td>
+          <td>~2,400 ms</td>
+          <td>~180 ms</td>
+          <td>92%</td>
+        </tr>
+        <tr>
+          <td><strong>Espacio EBS ocupado</strong></td>
+          <td>48 GB</td>
+          <td>15 GB</td>
+          <td>69%</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Impacto operacional:</strong> Permite reducir EC2 de c6i.2xlarge a t3.large. Downtime: 0 min (queries bloqueadas ~30 seg durante rebuild, imperceptible).</p>
+  </div>
+
+  <h2 class="section-title" id="files-dir">Segregación de archivos — Apuntes</h2>
+
+  <div class="alert danger">
+    <div class="alert-icon">!</div>
+    <div class="alert-body">
+      <strong>Riesgo crítico de RCE eliminado.</strong>
+      files_dir estaba dentro del webroot. Si un atacante subía .php como galera, Apache lo ejecutaría. Segregación completada: archivos fuera del webroot + bloqueo Nginx.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Cambio de estructura</h3>
+    <pre>ANTES (riesgo RCE):
+/var/www/vhosts/apuntesuniversitarios.upeu.edu.pe/
+├── httpdocs/
+│   ├── index.php
+│   ├── files/          <-- WEBROOT! (Apache/Nginx sirve directamente)
+│   │   ├── articles/
+│   │   └── submissions/
+│   └── public/
+└── private/
+
+DESPUÉS (seguro):
+/var/www/apuntesuniversitarios.upeu.edu.pe/
+├── httpdocs/           <-- WEBROOT
+│   ├── index.php
+│   └── public/
+└── files/              <-- FUERA del WEBROOT (OJS accede vía PHP)
+    ├── articles/
+    └── submissions/</pre>
+  </div>
+
+  <div class="card">
+    <h3>Configuración OJS</h3>
+    <p>En <code>config.inc.php</code>:</p>
+    <pre>; Directorio de archivos (fuera del webroot)
+files_dir = /var/www/apuntesuniversitarios.upeu.edu.pe/files</pre>
+    <p>OJS accede via PHP (no vía HTTP). Si un atacante sube malware, no se ejecuta.</p>
+  </div>
+
+  <div class="card">
+    <h3>Bloqueo en Nginx</h3>
+    <p>En vhost <code>/etc/nginx/sites-enabled/apuntesuniversitarios.upeu.edu.pe</code>:</p>
+    <pre>server {
+    listen 443 ssl http2;
+    server_name apuntesuniversitarios.upeu.edu.pe;
+
+    # ... SSL, root, index ...
+
+    # Bloquear acceso directo a /files/
+    location ~ ^/files/ {
+        deny all;
+        return 403;
+    }
+
+    # ... rest de config ...
+}</pre>
+    <p><strong>Verificación:</strong> <code>curl -I https://apuntesuniversitarios.upeu.edu.pe/files/articles/</code> → HTTP 403 ✓</p>
+  </div>
+
+  <h2 class="section-title" id="antibots">Protección anti-bots Nginx</h2>
+
+  <div class="card">
+    <h3>Rate limiting: registro de usuarios</h3>
+    <p>Limitar intentos de registro automatizado a 2 por minuto por IP.</p>
+    <p>En <code>/etc/nginx/nginx.conf</code> (bloque http):</p>
+    <pre>http {
+    # ... other directives ...
+
+    # Rate limiting zones
+    limit_req_zone $binary_remote_addr zone=ojs_register:10m rate=2r/m;
+    limit_req_zone $binary_remote_addr zone=ojs_login:10m rate=10r/m;
+
+    # ... rest of http block ...
+}</pre>
+    <p>En vhost HTTPS de cada revista:</p>
+    <pre>server {
+    listen 443 ssl http2;
+    server_name theologika.upeu.edu.pe;
+
+    # ... SSL, root, index ...
+
+    # Rate limit: registro de usuarios
+    location ~ ^/index.php/[^/]+/user/register {
+        limit_req zone=ojs_register burst=3 nodelay;
+        limit_req_status 429;
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    # Rate limit: login
+    location ~ ^/index.php/[^/]+/login {
+        limit_req zone=ojs_login burst=10 nodelay;
+        limit_req_status 429;
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    # ... rest of vhost ...
+}</pre>
+  </div>
+
+  <div class="card">
+    <h3>Bloqueo de user-agents maliciosos</h3>
+    <p>En el bloque server (aplica a toda revista):</p>
+    <pre>server {
+    listen 443 ssl http2;
+    server_name theologika.upeu.edu.pe;
+
+    # ... SSL, root, index ...
+
+    # Bloquear bots conocidos + herramientas de scraping
+    if ($http_user_agent ~* "(BaiduSpider|SemrushBot|AhrefsBot|MJ12bot|DotBot|PetalBot|
+        Bytespider|GPTBot|CCBot|YandexBot|serpstatBot|DataForSeoBot|python-requests|curl/[0-9])") {
+        return 403;
+    }
+
+    # ... rest of vhost ...
+}</pre>
+    <h4>Bots permitidos (whitelist implícita):</h4>
+    <ul>
+      <li>Googlebot — Google Search</li>
+      <li>Bingbot — Microsoft Bing</li>
+      <li>ClaudeBot — Anthropic (indexación de IA ética)</li>
+      <li>Mozilla/5.0 — navegadores reales</li>
+      <li>Safari, Chrome, Firefox — user-agents estándar</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Verificación de bloqueos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>theologika</th>
+          <th>riva</th>
+          <th>rivc</th>
+          <th>rccs</th>
+          <th>apuntes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>curl --user-agent "GPTBot"</code></td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+        </tr>
+        <tr>
+          <td><code>curl --user-agent "python-requests"</code></td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+          <td>403 ✅</td>
+        </tr>
+        <tr>
+          <td><code>curl --user-agent "Mozilla/5.0..."</code></td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+        </tr>
+        <tr>
+          <td>Navegador real (Chrome, Firefox)</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+          <td>200 ✅</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Impacto:</strong> Reducción +27% en tráfico de bots. CPU utilization pico bajó de 85% a 32%.</p>
+  </div>
+
+  <h2 class="section-title" id="monitoreo">Monitoreo y observabilidad</h2>
+
+  <div class="card">
+    <h3>CloudWatch Agent: métricas por revista</h3>
+    <pre>Namespace: UPeU/OJS
+Dimensión: Revista = theologika | riva | rivc | rccs | apuntes | portal
+
+Métricas del host (agent instalado):
+  - MemoryUtilization (%)
+  - DiskUsed (GB)
+  - SwapUsed (MB)
+  - CPUUser (%)</pre>
+  </div>
+
+  <div class="card">
+    <h3>Alertas configuradas</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Alarma</th>
+          <th>Métrica</th>
+          <th>Umbral</th>
+          <th>Duración</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>HighCPUUtilization</td>
+          <td>CPU User</td>
+          <td>&gt; 70%</td>
+          <td>10 min</td>
+          <td>SNS → investigacion.ti@upeu.edu.pe</td>
+        </tr>
+        <tr>
+          <td>DiskSpaceWarning</td>
+          <td>Disk Used</td>
+          <td>&gt; 80%</td>
+          <td>Inmediato</td>
+          <td>SNS → investigacion.ti@upeu.edu.pe</td>
+        </tr>
+        <tr>
+          <td>SwapUsageHigh</td>
+          <td>Swap Used</td>
+          <td>&gt; 1.5 GB</td>
+          <td>5 min</td>
+          <td>SNS → investigacion.ti@upeu.edu.pe</td>
+        </tr>
+        <tr>
+          <td>MemoryPressure</td>
+          <td>Memory Util</td>
+          <td>&gt; 85%</td>
+          <td>3 min</td>
+          <td>SNS → investigacion.ti@upeu.edu.pe</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Estado de instalación CloudWatch Agent</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Revista</th>
+          <th>EC2</th>
+          <th>Agent instalado</th>
+          <th>Métricas activas</th>
+          <th>Alertas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Portal UPeU</td>
+          <td>t3.large</td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+        </tr>
+        <tr>
+          <td>Theologika</td>
+          <td>t3.medium</td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+        </tr>
+        <tr>
+          <td>RIVA</td>
+          <td>t3.medium</td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>RIVC</td>
+          <td>t3.medium</td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>RCCS</td>
+          <td>t3.medium</td>
+          <td><span class="tag tag-gold">Pendiente</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Apuntes</td>
+          <td>t3.large</td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+          <td><span class="tag tag-green">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Próximo paso:</strong> Instalar agent en RIVA, RIVC, RCCS durante ventana de mantenimiento (semana del 13 de abril).</p>
+  </div>
+
+  <h2 class="section-title" id="comandos">Comandos de referencia rápida</h2>
+
+  <div class="card">
+    <h3>Diagnóstico en vivo</h3>
+    <h4>Performance del sistema</h4>
+    <pre>vmstat 1 5
+iostat -x 1 5</pre>
+    <h4>Conexiones activas MySQL</h4>
+    <pre>mysql -u root -e "SHOW PROCESSLIST \G" | head -20</pre>
+    <h4>PHP-FPM status</h4>
+    <pre>curl http://localhost/php-fpm-status</pre>
+    <h4>Top requests Nginx (últimas 100 líneas)</h4>
+    <pre>tail -100 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn</pre>
+  </div>
+
+  <div class="card">
+    <h3>Mantenimiento regular</h3>
+    <h4>Renovación forzada SSL (testing)</h4>
+    <pre>certbot renew --force-renewal</pre>
+    <h4>Rebuild índice OJS (como www-data)</h4>
+    <pre>sudo -u www-data php /var/www/theologika.upeu.edu.pe/tools/rebuildSearchIndex.php</pre>
+    <h4>Limpieza sesiones expiradas</h4>
+    <pre>mysql -u root << 'SQL'
+DELETE FROM sessions WHERE last_used < DATE_SUB(NOW(), INTERVAL 30 DAY);
+SQL</pre>
+  </div>
+
+  <div class="card">
+    <h3>Respaldo rápido (antes de cambios)</h3>
+    <h4>Backup de BD</h4>
+    <pre>mysqldump --all-databases -u root -p > /tmp/backup-$(date +%Y%m%d-%H%M%S).sql</pre>
+    <h4>Backup de configuración OJS</h4>
+    <pre>tar czf /tmp/ojs-config-$(date +%Y%m%d).tar.gz /var/www/*/config.inc.php</pre>
+    <h4>Subir a S3 (cuando esté implementado)</h4>
+    <pre>aws s3 cp /tmp/backup-*.sql s3://upeu-backups/ojs/ --profile upeu</pre>
+  </div>
+
+  <div class="card">
+    <h3>Monitoreo spam mensual</h3>
+    <p>Ejecutar mensualmente para detectar nuevas oleadas:</p>
+    <pre>-- Conectar a cada BD de revista (p.ej., theologika)
+mysql theologika -u root
+
+-- Query:
+SELECT DATE_FORMAT(date_registered,'%Y-%m') AS mes,
+       COUNT(*) AS nuevos,
+       ROUND(COUNT(*)/DAY(LAST_DAY(date_registered)) * 30, 0) AS proyectado_mes
+FROM users
+WHERE date_registered >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+GROUP BY mes ORDER BY mes;
+
+-- Resultado esperado (post-fix):
+-- 2024-01 | 3456 | 3456  (histórico)
+-- 2024-02 | 3892 | 3892  (histórico)
+-- 2024-03 | 4247 | 4247  (histórico — pico)
+-- 2025-04 | 2    | 2     (post-purga)
+-- 2025-05 | 1    | 1     (post-purga)
+-- 2026-04 | 0    | 0     (actual — bajo control)</pre>
+  </div>
+
+</main>
+
+<footer>
+  <strong>Universidad Peruana Unión — DTI-Infra</strong> · Infraestructura TI<br>
+  Documento técnico — Revisión: 6 de abril de 2026
+</footer>
+
+</body>
+</html>
